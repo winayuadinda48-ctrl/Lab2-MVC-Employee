@@ -1,0 +1,46 @@
+<!-- templates/form.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% if employee %}Edit Employee{% else %}Tambah Employee{% endif %}</title>
+</head>
+<body>
+    <h2>{% if employee %}Edit Data Employee{% else %}Tambah Employee Baru{% endif %}</h2>
+    
+    <!-- Form Otomatis Berganti URL: Kirim ke /update/id jika edit, atau /new jika tambah -->
+    <form action="{% if employee %}/employees/update/{{ employee.id }}{% else %}/employees/new{% endif %}" method="POST">
+        <label>Nama:</label><br>
+        <input type="text" name="name" value="{{ employee.name if employee else '' }}" required><br><br>
+
+        <label>Posisi:</label><br>
+        <input type="text" name="position" value="{{ employee.position if employee else '' }}"><br><br>
+
+        <label>Gaji:</label><br>
+        <input type="number" name="salary" value="{{ employee.salary if employee else '' }}"><br><br>
+
+        <button type="submit">{% if employee %}Update{% else %}Simpan{% endif %}</button>
+        {% if employee %}
+            <a href="/employees/new">Batal</a>
+        {% endif %}
+    </form>
+
+    <hr>
+
+    <h3>Daftar Employee:</h3>
+    <ul>
+    {% for e in employees %}
+        <li>
+            {{ e.name }} - {{ e.position }} - Rp{{ e.salary }}
+            
+            <!-- Tombol Edit -->
+            [<a href="/employees/edit/{{ e.id }}">Edit</a>]
+            
+            <!-- Tombol Delete -->
+            <form action="/employees/delete/{{ e.id }}" method="POST" style="display:inline;">
+                <button type="submit" onclick="return confirm('Yakin mau hapus data {{ e.name }}?')">Delete</button>
+            </form>
+        </li>
+    {% endfor %}
+    </ul>
+</body>
+</html>
